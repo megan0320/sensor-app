@@ -1,0 +1,4 @@
+#Wed Jan 19 10:09:03 CST 2022
+base.0=F\:\\App\\sensor-app\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

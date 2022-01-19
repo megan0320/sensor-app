@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
+import 'package:air_quality/pages/home/panels/bluetooth_management.dart';
+
 /// A panel in the HomePage which provides app settings
 class SettingsPanel extends StatefulWidget {
   const SettingsPanel({Key? key}) : super(key: key);
@@ -31,8 +33,19 @@ class _SettingsPanelState extends State<SettingsPanel> {
           SimpleSettingsTile(
             title: 'Device name',
             subtitle: 'My Air-Checker',
-          )
+          ),
+          ElevatedButton(
+          child: const Text('Bluetooth Devices Management'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>  FlutterBlueApp()),
+            );
+          },
+        ),
+
         ])
+
       ],
     );
   }
