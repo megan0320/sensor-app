@@ -26,22 +26,33 @@ class _SettingsPanelState extends State<SettingsPanel> {
           values: const <int, String>{0: 'Celsius', 1: 'Fahrenheit'},
         ),
         SettingsGroup(title: 'Device Info', children: <Widget>[
+          /*
           SimpleSettingsTile(
             title: 'SW version',
             subtitle: '0.1.1',
           ),
           SimpleSettingsTile(
-            title: 'Device name',
-            subtitle: 'My Air-Checker',
-          ),
-          ElevatedButton(
-          child: const Text('Bluetooth Devices Management'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) =>  FlutterBlueApp()),
-            );
-          },
+            title: 'My Air-Checker',
+            subtitle: '0.1.1'
+          ),*/
+          ElevatedButton.icon(
+            icon: Icon(Icons.bluetooth),
+            label: const Text('My Air-Checker'),
+            
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  FlutterBlueApp()),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.lightBlueAccent,
+              shadowColor: Colors.blueAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+              ),
+              side: BorderSide(width: 2, color: Colors.white),
+            ),
         ),
 
         ])

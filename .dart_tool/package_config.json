@@ -110,6 +110,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "fluttertoast",
+      "rootUri": "file:///F:/flutter_windows_2.8.1-stable/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.0.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "js",
       "rootUri": "file:///F:/flutter_windows_2.8.1-stable/.pub-cache/hosted/pub.dartlang.org/js-0.6.3",
       "packageUri": "lib/",
@@ -350,7 +356,7 @@
       "languageVersion": "2.15"
     }
   ],
-  "generated": "2022-01-18T08:08:06.853101Z",
+  "generated": "2022-01-19T05:43:27.381269Z",
   "generator": "pub",
   "generatorVersion": "2.15.1"
 }

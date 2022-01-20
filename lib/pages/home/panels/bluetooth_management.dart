@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:air_quality/flutter_blue.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 
 void main() => runApp(FlutterBlueApp());
 
@@ -63,13 +65,49 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+
+
+
   ListView _buildListViewOfDevices() {
     List<Container> containers = <Container>[];
+    containers.add(
+        Container(
+            height: 50,
+            child: Row(
+              children:<Widget>[
+                  ElevatedButton.icon(
+                      icon: Icon(Icons.search),
+                      label: Text("Scan Device"),
+                      onPressed: () {
+                        widget.flutterBlue.startScan();
+                        Fluttertoast.showToast(
+                            msg: "Scan Device Successfully",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.lightBlue,
+                        shadowColor: Colors.blueAccent,
+                      ),
+                  )
+              ]
+
+            )
+      )
+    );
+
     for (BluetoothDevice device in widget.devicesList) {
       containers.add(
+
         Container(
           height: 50,
           child: Row(
+
             children: <Widget>[
               Expanded(
                 child: Column(
@@ -79,11 +117,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
-              FlatButton(
-                color: Colors.blue,
+              OutlinedButton(
                 child: Text(
                   'Connect',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.lightBlueAccent),
                 ),
                 onPressed: () async {
                   widget.flutterBlue.stopScan();
@@ -100,12 +137,42 @@ class _MyHomePageState extends State<MyHomePage> {
                     _connectedDevice = device;
                   });
                 },
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.black87,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  side: BorderSide(width: 2, color: Colors.lightBlueAccent),
+                ),
+
+              ),
+              IconButton(
+                icon: Icon(Icons.delete),
+                color: Colors.red,
+                iconSize: 30.0,
+                splashRadius: 20.0,
+                onPressed: () {},
               ),
             ],
           ),
         ),
       );
     }
+
+    if(widget.devicesList.isEmpty){
+      containers.add(
+
+          Container(
+            height: 50,
+              child: Row(
+                  children:<Text>[
+                    Text("No devices available. Please check the status of bluetooth and try again.")
+                  ]
+              )
+          )
+      );
+    }
+
 
     return ListView(
       padding: const EdgeInsets.all(8),
@@ -218,6 +285,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ListView _buildConnectDeviceView() {
     List<Container> containers = <Container>[];
 
+
     for (BluetoothService service in _services) {
       List<Widget> characteristicsWidget = <Widget>[];
 
@@ -268,6 +336,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   ListView _buildView() {
+
     if (_connectedDevice != null) {
       return _buildConnectDeviceView();
     }
@@ -280,6 +349,7 @@ class _MyHomePageState extends State<MyHomePage> {
       title: Text(widget.title),
     ),
     body: _buildView(),
+
   );
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
