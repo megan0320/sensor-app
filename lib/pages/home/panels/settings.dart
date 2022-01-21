@@ -38,7 +38,7 @@ class _SettingsPanelState extends State<SettingsPanel> {
           ElevatedButton.icon(
             icon: Icon(Icons.bluetooth),
             label: const Text('My Air-Checker'),
-            
+
             onPressed: () {
               Navigator.push(
                 context,
