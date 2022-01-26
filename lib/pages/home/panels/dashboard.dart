@@ -2,133 +2,120 @@ import 'package:air_quality/models/air_quality.dart';
 import 'package:air_quality/widgets/air_quality_monitor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 import 'package:provider/provider.dart';
 
-/// A panel in HomePage which displays the info gathered from Air Quality Checker device 
-class DashboardPanel extends StatefulWidget {
-  final AirQualityChecker checker;
-  const DashboardPanel({required this.checker, Key? key}) : super(key: key);
+FlutterBlue flutterBlue = FlutterBlue.instance;
 
-  @override
-  State<StatefulWidget> createState() {
-    return _DashboardPanelState();
-  }
-}
+/// A panel in HomePage which displays the info gathered from Air Quality Checker device
+class DashboardPanel extends StatelessWidget {
+  //final AirQualityChecker checker;
 
-class _DashboardPanelState extends State<DashboardPanel> {
-  @override
-  Widget build(BuildContext context) {
-    return AirQualityMonitor(
-        checker: widget.checker,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: const <Widget>[
-            Overview(),
-            Dashboard(),
-          ],
-        ));
-  }
-}
+  const DashboardPanel({Key? key}) : super(key: key);
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _DashboardState();
-  }
-}
-
-Widget _buildDashboard(AirQuality quality) {
-  return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            DashboardItem(
-              label: quality.co2.toString() + ' PPM',
-              image: const AssetImage("images/ic_co2.png"),
-            ),
-            DashboardItem(
-              label: quality.voc.toString() + ' PPM',
-              image: const AssetImage("images/ic_voc.png"),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            DashboardItem(
-              label: quality.temperature.toString() + '°C',
-              image: const AssetImage("images/ic_temperature.png"),
-            ),
-            DashboardItem(
-              label: quality.humidity.toString() + ' %',
-              image: const AssetImage("images/ic_humidity.png"),
-            )
-          ],
-        )
-      ]);
-}
-
-class _DashboardState extends State<Dashboard> {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<AirQuality>(
-      builder: (context, quality, child) {
-        return _buildDashboard(quality);
-      },
-    );
-  }
-}
-
-class DashboardItem extends StatefulWidget {
-  final String label;
-  //final IconData icon;
-  final AssetImage image;
-
-  /* const DashboardItem({required this.label, required this.icon, Key? key})
-      : super(key: key); */
-
-  const DashboardItem({required this.label, required this.image, Key? key})
-      : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _DashboardItemState();
-  }
-}
-
-class _DashboardItemState extends State<DashboardItem> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: <Widget>[
-        ImageIcon(
-          widget.image,
-          size: 100,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: const <Widget>[
+        Expanded(
+          child: Overview(),
         ),
-        Text(
-          widget.label,
-          style: const TextStyle(fontSize: 20, color: Colors.blue),
-        )
+        Expanded(
+          child: Dashboard(),
+        ),
       ],
     );
   }
 }
 
-class Overview extends StatefulWidget {
-  const Overview({Key? key}) : super(key: key);
+class Dashboard extends StatelessWidget {
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return _OverviewState();
+  Widget build(BuildContext context) {
+    return Consumer<AirQuality>(
+      builder: (context, quality, child) {
+        return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Expanded(
+                      child: DashboardItem(
+                        label: quality.co2.toString() + ' PPM',
+                        image: const AssetImage("images/ic_co2.png"),
+                      ),
+                    ),
+                    Expanded(
+                      child: DashboardItem(
+                        label: quality.voc.toString() + ' PPM',
+                        image: const AssetImage("images/ic_voc.png"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Expanded(
+                      child: DashboardItem(
+                        label: quality.temperature.toString() + '°C',
+                        image: const AssetImage("images/ic_temperature.png"),
+                      ),
+                    ),
+                    Expanded(
+                      child: DashboardItem(
+                        label: quality.humidity.toString() + ' %',
+                        image: const AssetImage("images/ic_humidity.png"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ]);
+      },
+    );
   }
 }
 
-class _OverviewState extends State<Overview> {
+class DashboardItem extends StatelessWidget {
+  final String label;
+  final AssetImage image;
+
+  const DashboardItem({required this.label, required this.image, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: ImageIcon(
+            image,
+            size: 100,
+          ),
+        ),
+        Expanded(
+          child: Text(
+            label,
+            style: const TextStyle(fontSize: 20, color: Colors.blue),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class Overview extends StatelessWidget {
+  const Overview({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -137,16 +124,20 @@ class _OverviewState extends State<Overview> {
           mainAxisAlignment: MainAxisAlignment.center,
           //crossAxisAlignment: CrossAxisAlignment.center,
           children: const [
-            Image(
-              image: AssetImage("images/ic_rating.png"),
-              width: 180,
-              height: 180,
+            Expanded(
+              flex: 2,
+              child: Image(
+                image: AssetImage("images/ic_rating.png"),
+              ),
             ),
-            Text(
-              '目前CO2濃度過高，請留意通風，維持新鮮空氣。',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
-              textAlign: TextAlign.center,
-            )
+            Expanded(
+              flex: 1,
+              child: Text(
+                '目前CO2濃度過高，請留意通風，維持新鮮空氣。',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300),
+                textAlign: TextAlign.center,
+              ),
+            ),
           ],
         ));
   }
