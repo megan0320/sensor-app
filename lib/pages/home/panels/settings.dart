@@ -42,7 +42,7 @@ class _SettingsPanelState extends State<SettingsPanel> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  FlutterBlueApp()),
+                MaterialPageRoute(builder: (context) =>  bleDeviceWidget()),
               );
             },
             style: ElevatedButton.styleFrom(

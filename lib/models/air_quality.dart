@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// The [AirQuality] class holds the latest air quality info gathered from Air Quality Checker device.
 class AirQuality extends ChangeNotifier {
+
   int _co2 = 0;
   int _voc = 0;
-  int _temperature = 0;
+  double _temperature = 0;
   int _humidity = 0;
 
   AirQuality();
@@ -17,7 +19,7 @@ class AirQuality extends ChangeNotifier {
     return _voc;
   }
 
-  int get temperature {
+  double get temperature {
     return _temperature;
   }
 
@@ -42,7 +44,7 @@ class AirQuality extends ChangeNotifier {
   }
 
   /// Called by a AQC device to update the latest temperature measurement
-  void updateTemperature(int temperature) {
+  void updateTemperature(double temperature) {
     if (temperature != _temperature) {
       _temperature = temperature;
       notifyListeners();
