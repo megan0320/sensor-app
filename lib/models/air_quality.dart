@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// The [AirQuality] class holds the latest air quality info gathered from Air Quality Checker device.
 class AirQuality extends ChangeNotifier {
-
   int _co2 = 0;
   int _voc = 0;
   double _temperature = 0;

@@ -5,7 +5,6 @@ import 'package:air_quality/models/air_quality.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 var logger = Logger();
 
@@ -29,7 +28,6 @@ class AirQualityMonitor extends StatefulWidget {
 }
 
 class _AirQualityMonitorState extends State<AirQualityMonitor> {
-  
   late AirQuality _airQuality;
 
   Timer? _timer;
@@ -41,7 +39,6 @@ class _AirQualityMonitorState extends State<AirQualityMonitor> {
     }
 
     _timer = Timer.periodic(widget.duration, (timer) async {
-
       int co2 = await widget.checker.readCO2();
       _airQuality.updateCO2(co2);
 
@@ -63,13 +60,13 @@ class _AirQualityMonitorState extends State<AirQualityMonitor> {
 
   @override
   void initState() {
-
     super.initState();
   }
 
   @override
   void dispose() {
     _stop();
+    
     super.dispose();
   }
 
@@ -94,7 +91,8 @@ class _AirQualityMonitorState extends State<AirQualityMonitor> {
 ///
 abstract class AirQualityChecker {
   static const disconnected = 0;
-  static const connected = 1;
+  static const connecting = 1;
+  static const connected = 2;
 
   /// Reads the CO2 concentration value in PPM.
   Future<int> readCO2() async {

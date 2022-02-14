@@ -2,12 +2,12 @@ import 'package:air_quality/pages/home/panels/dashboard.dart';
 import 'package:air_quality/pages/home/panels/settings.dart';
 import 'package:air_quality/widgets/air_quality_monitor.dart';
 import 'package:flutter/material.dart';
-
-import '../../flutter_blue.dart';
+import 'package:flutter_blue/flutter_blue.dart';
 
 /// The Home page of the app. Including the following panels:
 /// - Dashboard
 /// - Settings
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title, required this.checker})
       : super(key: key);
@@ -23,12 +23,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _panelIndex = 0;
   bool _noConnectTipShowed = false;
+
+  bool _connectingMsgShowed = false;
+
   late List _panels;
 
   void _selectPanel(int index) {
-    setState(() {
-      _panelIndex = index;
-    });
+    if(mounted){
+      setState(() {
+        _panelIndex = index;
+      });
+    }
+
   }
 
   /// Builds the notice displayed when the AQC device is not connected
@@ -69,19 +75,58 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildConnectingMessage(BuildContext context) {
+    return Container(
+      height: 100,
+      padding: const EdgeInsets.all(32),
+      child: const Text(
+        "Connecting to device...",
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  void _clearMessage() {
+    if (_connectingMsgShowed) {
+      Navigator.pop(context);
+    }
+
+    if (_noConnectTipShowed) {
+      Navigator.pop(context);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
     var state = widget.checker.state.asBroadcastStream();
     state.listen((event) {
-      if (event == AirQualityChecker.disconnected) {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return _buildNoConnectionNotice(context);
-          },
-        );
+
+
+      switch (event) {
+        case AirQualityChecker.disconnected:
+          {
+            _noConnectTipShowed = true;
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return _buildNoConnectionNotice(context);
+              },
+            ).then((value) => _noConnectTipShowed = false);
+          }
+          break;
+        case AirQualityChecker.connecting:
+          {
+            _connectingMsgShowed = true;
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => _buildConnectingMessage(context),
+              isDismissible: false,
+            ).then((value) => _connectingMsgShowed = false);
+          }
+          break;
+
       }
     });
 
@@ -105,12 +150,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(_panels[_panelIndex]['title']),
       ),
-        body: RefreshIndicator(
-        //  Start scanning for Bluetooth LE devices
-        onRefresh: () =>
-            FlutterBlue.instance.startScan(timeout: Duration(seconds: 4)),
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Center(
         child: AirQualityMonitor(
           checker: widget.checker,
           duration: const Duration(seconds: 3),
