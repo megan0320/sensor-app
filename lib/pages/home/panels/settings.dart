@@ -1,8 +1,10 @@
+import 'package:air_quality/models/connect_info.dart';
+import 'package:air_quality/widgets/air_quality_monitor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
-import 'package:air_quality/pages/home/panels/bluetooth_management.dart';
+import 'package:air_quality/pages/devices.dart';
 
 /// A panel in the HomePage which provides app settings
 class SettingsPanel extends StatefulWidget {
@@ -26,24 +28,12 @@ class _SettingsPanelState extends State<SettingsPanel> {
           values: const <int, String>{0: 'Celsius', 1: 'Fahrenheit'},
         ),
         SettingsGroup(title: 'Device Info', children: <Widget>[
-          /*
-          SimpleSettingsTile(
-            title: 'SW version',
-            subtitle: '0.1.1',
-          ),
-          SimpleSettingsTile(
-            title: 'My Air-Checker',
-            subtitle: '0.1.1'
-          ),*/
           ElevatedButton.icon(
             icon: Icon(Icons.bluetooth),
-            label: const Text('My Air-Checker'),
-
+            label: Text('Set Device'),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>  bleDeviceWidget()),
-              );
+              Navigator.pop(context);
+              Navigator.pushNamed(context, 'devices_page');
             },
             style: ElevatedButton.styleFrom(
               primary: Colors.lightBlueAccent,
@@ -53,10 +43,8 @@ class _SettingsPanelState extends State<SettingsPanel> {
               ),
               side: BorderSide(width: 2, color: Colors.white),
             ),
-        ),
-
+          ),
         ])
-
       ],
     );
   }
